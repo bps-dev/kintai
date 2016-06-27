@@ -1,0 +1,82 @@
+/********************************************
+** daily.html
+*********************************************/
+#daily_main_area{
+    text-align: center;
+}
+
+#date_select{
+    padding: 8px 0px 2px 0px;
+}
+
+#day{
+	padding: 0px 5px 0px 10px; 
+	font-size: 20px;
+}
+
+#work_time_input_area{
+	padding: 5px 20px 0px 20px;
+}
+	
+#work_time{
+	text-align: left;
+}
+	
+#input_table{
+    width:100%;
+	border: solid 1px #000000; 
+	border-radius: 5px;
+}
+
+#input_td{
+	padding: 8px;
+}
+
+#input_td .timePicker{
+    font-size: 20px;
+    width: 125px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#input_description{
+	text-align: left;
+}
+
+#remark_section{
+	padding: 20px 20px 0px 20px;
+}
+
+.remark_textarea{
+	width: 100%;
+	height: 150px; 
+	border:1px #000000 solid;
+}
+
+.timePicker{
+    border: 1px #000000 solid;
+    height: 30px;
+    width: 100px;
+    background-color: white;
+}
+
+.monthPicker{
+    border: 1px #000000 solid;
+    height: 30px;
+    width: 150px;
+    background-color: white;
+}
+
+#holiday_view div{
+    color: red;
+    font-size: 30px;
+}
+
+td#from {
+    padding-top: 20px;
+}
+
+
+span[id^="actualWorkTime"]　{
+    max-width: 115px;
+}

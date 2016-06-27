@@ -1,0 +1,89 @@
+<ons-page id="daily_page">
+    <ons-toolbar>
+        <div class="left">
+            <!-- メニュー -->
+            <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="fa-bars"></ons-icon></ons-toolbar-button>
+        </div>
+        <div class="right">
+            <!-- 日月切替ボタン -->
+            <ons-toolbar-button ng-click="app.slidingMenu.setMainPage('monthly.html', {closeMenu: true})">
+                <ons-icon icon="fa-calendar"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">日次入力画面</div>
+    </ons-toolbar>
+
+    <div id="daily_main_area">
+    
+        <!-- 日にち選択 -->
+        <div id="date_select">
+            <ons-button modifier="quiet" id="backDay">
+                <ons-icon icon="fa fa-play" size="25px" rotate="180"></ons-icon>
+            </ons-button>
+            
+            <span id="day"><span class="year"></span>年<span class="month"></span>月<span class="date"></span>日 (<span class="week"></span>)</span>
+            <input type="hidden" name="disp_date" id="disp_date" value="">
+            
+            <ons-button modifier="quiet" id="nextDay">
+                <ons-icon icon="fa fa-play" size="25px"></ons-icon>
+            </ons-button>
+        </div>
+        
+        <section id="work_time_input_area">
+            <div id="work_time">作業時間</div>
+            <table id="input_table">
+                <tr>
+                    <td id="input_td">
+                        <div id="input_start_time">出勤</div>
+                        <div class="timePicker" id="actual_work_start_time" />
+                        
+                    </td>
+                    <td id="from">～</td>
+                    <td id="input_td">
+                        <div id="input_end_time">退勤</div>
+                        <div class="timePicker" id="actual_work_end_time" />
+                    </td>
+                </tr>
+            </table>
+        </section>
+        
+        <section id="holiday_view">
+            <div>
+                <img src="images/bee.png" width="25" height="25">
+                休暇
+                <img src="images/bee.png" width="25" height="25">
+            </div>
+        </section>
+        
+        <!-- 備考 -->
+        <section id="remark_section">
+            <div id="input_description">備考</div>
+            <textarea id="anote" class="remark_textarea" placeholder="備考入力欄" ></textarea>
+        </section>
+
+        <!-- タブバー -->
+        <div class="tab-bar">
+            <label ng-click="" class="tab-bar__item">
+                <input type="radio" name="tab-bar-b" checked="checked" onClick="setWorkStartTime();" class="work_start_input">
+                <button id="stop" class="tab-bar__button work_start_button">
+                    <i class="tab-bar__icon">出勤</i>
+                </button>
+            </label>
+            
+            <label ng-click="" class="tab-bar__item">
+                <input type="radio" name="tab-bar-b" onClick="setWorkEndTime();" class="work_end_input">
+                <button id="record" class="tab-bar__button work_end_button">
+                    <i class="tab-bar__icon">退勤</i>
+                </button>
+            </label>
+            
+            <label ng-click="" class="tab-bar__item" onClick="setHoliday('text');">
+                <input type="radio" name="tab-bar-b">
+                <button id="star" class="tab-bar__button" >
+                    <i class="tab-bar__icon"><span id="text" ></span></i>
+                </button>
+            </label>
+        </div>
+        
+    </div>
+</ons-page>
