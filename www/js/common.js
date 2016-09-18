@@ -206,7 +206,7 @@ document.addEventListener("pageinit", function(e) {
         
         // 「先日」ボタン押下時のイベント
         $('#backDay').click(function(){
-            thisDate.setDate(thisDate.getDate() - 1);
+            thisDate.setDate(thisDate.getDate() - 1);            
             displayDailyData2(thisDate);
             //出勤時間、退勤時間を取得
             displayDailyData();
@@ -245,7 +245,7 @@ document.addEventListener("pageinit", function(e) {
         // 月次画面の日付押下時のイベント
         if(getDay()!=""){
             thisDate = getDay();
-             displayDailyData2(thisDate);
+            displayDailyData2(thisDate);
             //出勤時間、退勤時間を取得
             displayDailyData();
             //欠勤状態を取得
@@ -807,7 +807,7 @@ function setRemark() {
     var d = thisDate;
     var ymdWk = comDateFormat(d, "yyyyMMdd"); // 処理年月日（YYYYMMDD）
     var ymWk = ymdWk.substring(0, 6);         // 処理年月  （YYYYMM）
-    var dWk = ymdWk.substring(6, 8);        	// 処理日  （DD）
+    var dWk = ymdWk.substring(6, 8);         // 処理日  （DD）
     
     // DB接続
     var db = openDb("Database", "1.0", "KintaiDatabase", 200000);
@@ -873,7 +873,6 @@ function displayDailyData(){
     var work_month = $("#disp_date").val().substring(0,6);
     var work_date = $("#disp_date").val();
     var sql = "SELECT * FROM t_daily WHERE work_month = '" + work_month + "' and work_date = '" + work_date + "'"; 
-
     // DB接続
     var db = openDb("Database", "1.0", "KintaiDatabase", 200000);
     execSQL(db, sql, [], function(rs){
@@ -906,12 +905,25 @@ function displayDailyData(){
                 $(".work_end_input").attr("disabled", "dsabled");
                 $(".work_start_button").hide();
                 $(".work_start_input").attr("disabled", "dsabled");
-            } else {
-                
-            }
+            }    
             $("#actual_work_start_time").html(disp_actual_work_start_time);
             $("#actual_work_end_time").html(disp_actual_work_end_time);
             $(".remark_textarea").val(rs.rows.item(0).remark);
+        }else{
+            sql = "INSERT INTO t_monthly(work_month) VALUES ('"+ work_month + "')";
+            execSQL(db, sql, [], function(rs){});
+            for (var i = 1; i <= 31; i++) {
+                // 1ヶ月分のt_dailyデータをINSERT。
+                if (i < 10) {
+                    i = "0" + i;
+                }
+                var work_date = work_month + ""+i;
+                sql = "INSERT INTO t_daily(work_month, work_date) VALUES (" + work_month + ", " + work_date + ")";
+                execSQL(db, sql, [], function(rs){});
+            }
+            // 出勤ボタンを表示する
+            $(".work_start_button").show();
+            $(".work_start_input").removeAttr("disabled");
         }
     }, function(error){
       console.log(error.message);
@@ -1077,9 +1089,7 @@ function setWorkStartTime() {
     // 基本勤務始業時間
     var sql = "SELECT * from t_monthly where work_month = '" + ymWk + "'";
     execSQL(db, sql, [], function(rs){
-        if (rs.rows.length === 0 ){
-            alert(ymWk.substring(0, 4) + "年" + ymWk.substring(4, 6) + "月の月次データが\nデータベースに存在しません。");
-        } else {
+        if (rs.rows.length > 0 ){
             bwstWk = rs.rows.item(0).basic_work_start_time;
             
             // 現在時刻 >= 基本勤務始業時間（t_monthly . basic_work_start_time）の場合、端末の現在時刻を設定
@@ -1131,8 +1141,6 @@ function setWorkEndTime() {
     var ymdWk = comDateFormat(d, "yyyyMMdd"); // 処理年月日（YYYYMMDD）
     var ymWk = ymdWk.substring(0, 6);         // 処理年月  （YYYYMM）
     var hmWk = comDateFormat(d, "HHmm");      // 現在時刻  （HHMM）
-    
-    //console.log(hmWk);
     
     // DB接続
     var db = openDb("Database", "1.0", "KintaiDatabase", 200000);
@@ -1193,9 +1201,7 @@ function setHoliday(text) {
     var sql = "SELECT * from t_daily where work_month = '"+ ymWk +"' and work_date = '" + ymdWk + "'";
     
     execSQL(db, sql, [], function(rs){
-        if (rs.rows.length === 0 ){
-            alert(ymWk.substring(0, 4) + "年" + ymWk.substring(4, 6) + "月" + dWk + "日の日時データが\nデータベースに存在しません。");
-        } else {
+        if (rs.rows.length > 0 ){
             wdWk = rs.rows.item(0).work_div;
             
             var setHolidayWK;
@@ -1269,9 +1275,7 @@ function setHoridayText(){
     //勤怠区分取得
     var sql = "SELECT * from t_daily where work_month = '"+ ymWk +"' and work_date = '" + ymdWk + "'";
     execSQL(db, sql, [], function(rs){
-        if (rs.rows.length === 0 ){
-            alert(ymWk.substring(0, 4) + "年" + ymWk.substring(4, 6) + "月" + dWk + "日の日時データが\nデータベースに存在しません。");
-        } else {
+        if (rs.rows.length > 0 ){
             wdWk = rs.rows.item(0).work_div;
             var dispHoliday;
             if (wdWk == "1") {      //欠勤区分が欠勤（work_div=1）の場合
