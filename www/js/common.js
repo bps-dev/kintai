@@ -1148,9 +1148,7 @@ function setWorkEndTime() {
     // 基本勤務始業時間
     var sql = "SELECT * from t_monthly where work_month = '" + ymWk + "'";
     execSQL(db, sql, [], function(rs){
-        if (rs.rows.length === 0 ){
-            alert(ymWk.substring(0, 4) + "年" + ymWk.substring(4, 6) + "月の月次データが\nデータベースに存在しません。");
-        } else {
+        if (rs.rows.length > 0 ){
             bwedWk = rs.rows.item(0).basic_work_end_time;
             
             // 現在時刻 >= 基本勤務終業時間（t_monthly . basic_work_end_time）の場合、基本勤務終業時間を設定
