@@ -1426,9 +1426,25 @@ function sendMail() {
                     body = body + "\"" + item.remark + "\"\n";
                 }                 
             }
+            var ua = navigator.userAgent.toLowerCase();
+ 
+            // iPhone
+            var isiPhone = (ua.indexOf('iphone') > -1);
+            // iPad
+            var isiPad = (ua.indexOf('ipad') > -1);
+            // Android
+            var isAndroid = (ua.indexOf('android') > -1) && (ua.indexOf('mobile') > -1);
+            // Android Tablet
+            var isAndroidTablet = (ua.indexOf('android') > -1) && (ua.indexOf('mobile') == -1);
             
             setTimeout(function() {
-                mailKick(body);
+                //Androidの場合
+                 if (isAndroid||isAndroidTablet){
+                    mailKickAndroid(body);
+                 }else{ 
+                 //iOSの場合
+                    mailKickiOS(body);
+                 }
             } , 1000);
         }
         
@@ -1438,9 +1454,9 @@ function sendMail() {
 }
  
 // ----------------------------------------------------------------------
-// デフォルトメーラーを起動する
+// デフォルトメーラーを起動する(Android)
 // ----------------------------------------------------------------------
-function　mailKick(body) {
+function mailKickAndroid(body) {
     
     window.plugins.webintent.startActivity (
         {
@@ -1450,4 +1466,11 @@ function　mailKick(body) {
         function () {},
         function () {alert ('Failed to open URL via Android Intent');}
     );
+}
+
+// ----------------------------------------------------------------------
+// デフォルトメーラーを起動する(iOS)
+// ----------------------------------------------------------------------
+function mailKickiOS(body) {
+        document.location = 'mailto:' + "" +'?subject=' + "【はにかむ勤怠】勤怠CSV" + "&body=" + body;
 }
