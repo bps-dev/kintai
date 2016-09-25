@@ -483,6 +483,7 @@ function setMonthlyFirstTime(d) {
     var selectDay;     //知りたい日付(01,02,03…)
 
     $("#totalHoliday").html(totalHoliday);
+    $("#totalTime").html(totalTime);
 
     $("#monthlyDataDay_28").html("");
     $("#monthlyDataDay_29").html("");
@@ -499,6 +500,9 @@ function setMonthlyFirstTime(d) {
     $("#dailyPage_30").hide();
 
     for(var i = 0;i < thisMonthDay;i++){
+        // セルの初期化
+        $("#actualWorkTime_" + i).html(" 　" + "　 　" + "　～　" + "　 　" + "　[ " + 0 + "h ]");
+        
         monthlyDataDay[i] = i + 1;
         if (monthlyDataDay[i] < 10) {
             $("#monthlyDataDay_" + i).html("&nbsp&nbsp" + monthlyDataDay[i] + "日");
