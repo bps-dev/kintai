@@ -1223,8 +1223,20 @@ function setHoliday(text) {
                     alert("休暇を取り消しました。");
                 }, function(error){
                     alert(error.message);
-                }); 
-                
+                });
+                     //出勤・退勤時間が入っていない場合
+                if($("#actual_work_end_time").html() ==""){
+                    $(".work_start_button").hide();
+                    $(".work_start_input").attr("disabled","disabled");
+                    $(".work_end_button").show();
+                    $(".work_end_input").removeAttr("disabled");
+                }           
+                if($("#actual_work_start_time").html() ==""){
+                    $(".work_start_button").show();
+                    $(".work_start_input").removeAttr("disabled");
+                    $(".work_end_button").hide();
+                    $(".work_end_input").attr("disabled","disabled");
+                }                                
             } else {        //欠勤区分が勤務（work_div=0）の場合
                 //休暇ボタン表示
                 // 休暇ボタン押下時、勤怠区分を欠勤（t_daily . work_div=1）に更新する。
