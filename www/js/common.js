@@ -193,11 +193,14 @@ document.addEventListener("pageinit", function(e) {
         // 月末の場合、進むボタンを非表示にする
         var today = new Date();
         var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate()+1);
-        if ((today.getFullYear() < nextDate.getFullYear()) || today.getMonth() < nextDate.getMonth()) {
+        if (today.getFullYear() < nextDate.getFullYear()) {
+            $("#nextDay").hide();
+        } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
             $("#nextDay").hide();
         } else {
-            $("#nextDay").show();
+            $("#nextDay").show(); 
         }
+
         
         //備考欄のイベント処理
         $("#anote").blur( function () {
@@ -216,7 +219,9 @@ document.addEventListener("pageinit", function(e) {
             // 月末の場合、進むボタンを非表示にする
             var today = new Date();
             var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate()+1);
-            if ((today.getFullYear() < nextDate.getFullYear()) || today.getMonth() < nextDate.getMonth()) {
+            if (today.getFullYear() < nextDate.getFullYear()) {
+                $("#nextDay").hide();
+            } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
                 $("#nextDay").hide();
             } else {
                 $("#nextDay").show();
@@ -235,7 +240,9 @@ document.addEventListener("pageinit", function(e) {
             // 月末の場合、進むボタンを非表示にする
             var today = new Date();
             var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate()+1);
-            if ((today.getFullYear() < nextDate.getFullYear()) || today.getMonth() < nextDate.getMonth()) {
+            if (today.getFullYear() < nextDate.getFullYear()) {
+                $("#nextDay").hide();
+            } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
                 $("#nextDay").hide();
             } else {
                 $("#nextDay").show();
@@ -601,7 +608,9 @@ function setMonthlyFirstTime(d) {
     // 月末の場合、進むボタンを非表示にする
     var today = new Date();
     var nextDate = new Date(d.getFullYear(), d.getMonth()+1, d.getDate());
-    if ((today.getFullYear() < nextDate.getFullYear()) || today.getMonth() < nextDate.getMonth()) {
+    if (today.getFullYear() < nextDate.getFullYear()) {
+        $("#nextMonth").hide();
+    } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
         $("#nextMonth").hide();
     } else {
         $("#nextMonth").show();
