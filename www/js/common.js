@@ -190,7 +190,7 @@ document.addEventListener("pageinit", function(e) {
             }
         });
         
-        // 月末の場合、進むボタンを非表示にする
+        // 翌日が未来月の場合、進むボタンを非表示にする
         var today = new Date();
         var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate()+1);
         if (today.getFullYear() < nextDate.getFullYear()) {
@@ -216,7 +216,7 @@ document.addEventListener("pageinit", function(e) {
             //欠勤状態を取得
             setHoridayText();
             
-            // 月末の場合、進むボタンを非表示にする
+            // 翌日が未来月の場合、進むボタンを非表示にする
             var today = new Date();
             var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate()+1);
             if (today.getFullYear() < nextDate.getFullYear()) {
@@ -237,7 +237,7 @@ document.addEventListener("pageinit", function(e) {
             //欠勤状態を取得
             setHoridayText();
             
-            // 月末の場合、進むボタンを非表示にする
+            // 翌日が未来月の場合、進むボタンを非表示にする
             var today = new Date();
             var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate()+1);
             if (today.getFullYear() < nextDate.getFullYear()) {
@@ -605,7 +605,7 @@ function setMonthlyFirstTime(d) {
         alert(error.message);
     });
     
-    // 月末の場合、進むボタンを非表示にする
+    // 翌月が未来月の場合、進むボタンを非表示にする
     var today = new Date();
     var nextDate = new Date(d.getFullYear(), d.getMonth()+1, d.getDate());
     if (today.getFullYear() < nextDate.getFullYear()) {
