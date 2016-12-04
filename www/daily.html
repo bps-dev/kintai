@@ -10,55 +10,43 @@
                 <ons-icon icon="fa-calendar"></ons-icon>
             </ons-toolbar-button>
         </div>
-        <div class="center">日次入力画面</div>
-    </ons-toolbar>
-
-    <div id="daily_main_area">
-    
-        <!-- 日にち選択 -->
-        <div id="date_select">
-            <ons-button modifier="quiet" id="backDay">
-                <ons-icon icon="fa fa-play" size="25px" rotate="180"></ons-icon>
-            </ons-button>
-            
-            <span id="day"><span class="year"></span>年<span class="month"></span>月<span class="date"></span>日 (<span class="week"></span>)</span>
+        <div class="center">
+            <span id="day"><span class="year"></span>.<span class="month"></span>.<span class="date"></span>
             <input type="hidden" name="disp_date" id="disp_date" value="">
-            
-            <ons-button modifier="quiet" id="nextDay">
-                <ons-icon icon="fa fa-play" size="25px"></ons-icon>
-            </ons-button>
         </div>
+    </ons-toolbar>
+<div class="daily">
+    <div id="daily_main_area">
+        <!-- 作業時間 -->
+            <section id="work_time_input_area">
+	          <div id="work_time">
+	          	<span><img src="images/time-16.png" alt="clock" />作業時間</span>
+	         	</div>
+	          <div class="dailyTimeWrapper">
+	          	<div class="dTime attendance">
+	          		<p>出勤</p>
+	          		<div class="timePicker" id="actual_work_start_time" />
+	          	</div>
+	          	<div class="dTime">
+	          	</div>
+	          	<div class="dTime leaving">
+	          		<p>退勤</p>
+	          		<div class="timePicker" id="actual_work_end_time" />
+	          	</div>
+	          </div>
+	        </section>
         
-        <section id="work_time_input_area">
-            <div id="work_time">作業時間</div>
-            <table id="input_table">
-                <tr>
-                    <td id="input_td">
-                        <div id="input_start_time">出勤</div>
-                        <div class="timePicker" id="actual_work_start_time" />
-                        
-                    </td>
-                    <td id="from">～</td>
-                    <td id="input_td">
-                        <div id="input_end_time">退勤</div>
-                        <div class="timePicker" id="actual_work_end_time" />
-                    </td>
-                </tr>
-            </table>
-        </section>
-        
-        <section id="holiday_view">
-            <div>
-                <img src="images/bee.png" width="25" height="25">
-                休暇
-                <img src="images/bee.png" width="25" height="25">
-            </div>
+        <!-- 休暇アイコン -->
+        <section type="hidden"id="holiday_view">
+         <img src="images/heart-on-human-240.png"/>
         </section>
         
         <!-- 備考 -->
         <section id="remark_section">
-            <div id="input_description">備考</div>
-            <textarea id="anote" class="remark_textarea" placeholder="備考入力欄" ></textarea>
+            <div id="input_description">
+                <p><img src="images/clipboard-4-16.png" alt="clip" />備考</p>
+                <textarea id="anote" class="remark_textarea" rows="4" placeholder="備考入力欄" ></textarea>
+            </div>
         </section>
 
         <!-- タブバー -->
@@ -84,6 +72,6 @@
                 </button>
             </label>
         </div>
-        
+      </div>  
     </div>
 </ons-page>

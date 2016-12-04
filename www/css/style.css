@@ -1,6 +1,17 @@
 /********************************************
 ** daily.html
 *********************************************/
+
+.daily {
+    width: 100%;
+	height: 100%;
+  background-image: url(../images/product_background.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
 #daily_main_area{
     text-align: center;
 }
@@ -14,31 +25,16 @@
 	font-size: 20px;
 }
 
-#work_time_input_area{
-	padding: 5px 20px 0px 20px;
+#work_time_input_area {
+    margin: 0 20px;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 	
 #work_time{
 	text-align: left;
 }
 	
-#input_table{
-    width:100%;
-	border: solid 1px #000000; 
-	border-radius: 5px;
-}
-
-#input_td{
-	padding: 8px;
-}
-
-#input_td .timePicker{
-    font-size: 20px;
-    width: 125px;
-    display: table-cell;
-    vertical-align: middle;
-}
-
 #input_description{
 	text-align: left;
 }
@@ -47,15 +43,14 @@
 	padding: 20px 20px 0px 20px;
 }
 
-.remark_textarea{
-	width: 100%;
-	height: 150px; 
-	border:1px #000000 solid;
+.remark_textarea {
+    width: 100%;
 }
 
 .timePicker{
     border: 1px #000000 solid;
-    height: 30px;
+    border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+    height: 20px;
     width: 100px;
     background-color: white;
 }
@@ -67,16 +62,28 @@
     background-color: white;
 }
 
-#holiday_view div{
-    color: red;
-    font-size: 30px;
+#holiday_view {
+    height: 200px;
+	width: auto;
+	text-align: center;
 }
 
-td#from {
-    padding-top: 20px;
+#holiday_view > img {
+	height: 100%;
+	width: auto;
 }
-
 
 span[id^="actualWorkTime"]　{
     max-width: 115px;
+}
+
+.dailyTimeWrapper {
+    display: table;
+	width: 100%;
+}
+
+.dTime {
+	display: table-cell;
+	width: calc(100% / 3);
+	text-align: center;
 }
