@@ -288,129 +288,10 @@ document.addEventListener("pageinit", function(e) {
         });
         
         // 「遷移」ボタン押下時のイベント
-        $('#dailyPage_0').click(function(){
-            d.setDate(0 + 1);
-             setDay(d);
-        });
-        $('#dailyPage_1').click(function(){
-            d.setDate(1 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_2').click(function(){
-            d.setDate(2 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_3').click(function(){
-            d.setDate(3 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_4').click(function(){
-            d.setDate(4 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_5').click(function(){
-            d.setDate(5 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_6').click(function(){
-            d.setDate(6 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_7').click(function(){
-            d.setDate(7 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_8').click(function(){
-            d.setDate(8 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_9').click(function(){
-            d.setDate(9 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_10').click(function(){
-            d.setDate(10 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_11').click(function(){
-            d.setDate(11 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_12').click(function(){
-            d.setDate(12 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_13').click(function(){
-            d.setDate(13 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_14').click(function(){
-            d.setDate(14 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_15').click(function(){
-            d.setDate(15 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_16').click(function(){
-            d.setDate(16 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_17').click(function(){
-            d.setDate(17 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_18').click(function(){
-            d.setDate(18 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_19').click(function(){
-            d.setDate(19 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_20').click(function(){
-            d.setDate(20 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_21').click(function(){
-            d.setDate(21 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_22').click(function(){
-            d.setDate(22 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_23').click(function(){
-            d.setDate(23 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_24').click(function(){
-            d.setDate(24 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_25').click(function(){
-            d.setDate(25 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_26').click(function(){
-            d.setDate(26 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_27').click(function(){
-            d.setDate(27 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_28').click(function(){
-            d.setDate(28 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_29').click(function(){
-            d.setDate(29 + 1);
-             setDay(d);
-        });        
-        $('#dailyPage_30').click(function(){
-            d.setDate(30 + 1);
-             setDay(d);
+        $('ul.monthlyList').on('click', 'li.oneDay', function(){
+            var tran_day = $(this).attr('data-day');
+            d.setDate(tran_day);
+            setDay(d);
         });
     }
     
@@ -469,153 +350,163 @@ function setDay(d){
 // 月次画面展開時の初期設定(翌月、来月の値取得)
 // ----------------------------------------------------------------------
 function setMonthlyFirstTime(d) {    
-    var ymdWk = comDateFormat(d, "yyyyMMdd"); // 処理年月日（YYYYMMDD）
-    var ymWk = ymdWk.substring(0, 6);         // 処理年月  （YYYYMM）
-
-    $("#thisYear").html(ymWk.substring(0, 4));
-    $("#thisMonth").html(ymWk.substring(4, 6));
+    var ymdWk = comDateFormat(d, "yyyyMMdd");   // 処理年月日(YYYYMMDD)
+    var ymWk = ymdWk.substring(0, 6);           // 処理年月　(YYYYMM)
+    var yyyy = ymdWk.substring(0, 4);           // 処理月　　(YYYY)
+    var mm = ymdWk.substring(4, 6);             // 処理月　　(MM)
+    var dd = ymdWk.substring(6, 8);             // 処理月　　(dd)
 
     var thisMonthDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); //求めたい月の日数を取得
+    var htmlArray = []; //htmlを格納するための配列
 
-    var actualWorkStartTime;                     //出勤時間
-    var actualWorkEndTime;                       //退勤時間
-    var actualWorkTime = new Array(31);//勤務内容
-    var totalTime = 0;                           //合計勤務時間
-    var totalHoliday = 0;     　　　　　　　　   //合計欠勤日数
-    var monthlyDataDay = new Array(31);//日付
-    var givenDay;                                //初期表示する日程
-    var monthlyGivenDay;                         //日付として認識
-    var weekday = [ "日", "月", "火", "水", "木", "金", "土" ] ;
-    var monthlyDataWeek = new Array(thisMonthDay);
-    var selectDay;     //知りたい日付(01,02,03…)
-
-    $("#totalHoliday").html(totalHoliday);
-    $("#totalTime").html(totalTime);
-
-    $("#monthlyDataDay_28").html("");
-    $("#monthlyDataDay_29").html("");
-    $("#monthlyDataDay_30").html("");
-    $("#monthlyDataDay_31").html("");
-
-    $("#monthlyDataWeek_28").html("");
-    $("#monthlyDataWeek_29").html("");
-    $("#monthlyDataWeek_30").html("");
-    $("#monthlyDataWeek_31").html("");
-
-    $("#dailyPage_28").hide();
-    $("#dailyPage_29").hide();
-    $("#dailyPage_30").hide();
-
-    for(var i = 0;i < thisMonthDay;i++){
-        // セルの初期化
-        $("#actualWorkTime_" + i).html(" 　" + "　 　" + "　～　" + "　 　" + "　[ " + 0 + "h ]");
-        
-        monthlyDataDay[i] = i + 1;
-        if (monthlyDataDay[i] < 10) {
-            $("#monthlyDataDay_" + i).html("&nbsp&nbsp" + monthlyDataDay[i] + "日");
-            
-        } else {
-            $("#monthlyDataDay_" + i).html(monthlyDataDay[i] + "日");
-            
-        }
-       
-        selectDay = i + 1;
-        if(selectDay < 10){
-            selectDay = "0" + selectDay;   
-        }
-        givenDay = ymWk.substring(0, 4) + "/" + ymWk.substring(4,6) + "/" +　selectDay;
-        monthlyGivenDay = new Date(givenDay);
-　　　　monthlyDataWeek[i]  = weekday[ monthlyGivenDay.getDay() ];
-        $("#monthlyDataWeek_" + i).html("(" + monthlyDataWeek[i] + ")");
-        $("#dailyPage_" + i).show();
-    }
+    var actualWorkStartTime = [];   //出勤時間    
+    var start_h = [];               //出勤時間(時)
+    var start_m = [];               //出勤時間(分)
+    var actualWorkEndTime = [];     //退勤時間
+    var end_h = [];                 //退勤時間(時)
+    var end_m = [];                 //退勤時間(分)
+    var kinmuTime = [];             //勤務時間(休憩含む)
+    var kinmuTimeText = [];         //勤務時間(休憩含まない)
+    var remark = [];                //メモ欄
+    var work_div;                   //休暇の有無
+    var vacation_icon;              //休暇時のアイコン
     
     // DB接続
     var db = openDb("Database", "1.0", "KintaiDatabase", 200000);
     
-    // TODO:基本休憩時間を取得
     // 前月の基本勤務時間と基本休憩時間を選択
-    var sql = "SELECT * FROM t_monthly" 
+    var monthlySql = "SELECT * FROM t_monthly" 
             + " WHERE work_month = " + ymWk;
     
-    execSQL(db, sql, [], function(rs){
+    execSQL(db, monthlySql, [], function(rs){
+        
+        // 休憩時間の開始時間と終了時間を取得
         var firstbasicBreakStartTime = rs.rows.item(0).basic_break_start_time;
         var firstbasicBreakEndTime = rs.rows.item(0).basic_break_end_time;
         
+        // 休憩時間の開始時間と終了時間を時と分で区切る
         var firstbasicBreakStartTime1 = firstbasicBreakStartTime.substring(0, 2);
         var firstbasicBreakStartTime2 = firstbasicBreakStartTime.substring(2, 4);
         var firstbasicBreakEndTime1 = firstbasicBreakEndTime.substring(0, 2);
         var firstbasicBreakEndTime2 = firstbasicBreakEndTime.substring(2, 4);
         
+        // 休憩時間を計算する
         var basicBreakTime = (parseInt(firstbasicBreakEndTime1) * 60)
                             + parseInt(firstbasicBreakEndTime2)
                             - (parseInt(firstbasicBreakStartTime1) * 60)
                             - parseInt(firstbasicBreakStartTime2);
         
         // 出勤時間と退勤時間を選択
-        var sql = "SELECT * FROM t_daily"
+        var dailySql = "SELECT * FROM t_daily"
                 + " WHERE work_month = "
                 + ymWk;
-        execSQL(db, sql, [], function (rs) {
-            for(var i = 0;i < thisMonthDay;i++){
-                if(rs.rows.item(i).work_div == 1){
-                    actualWorkTime[i] = "　欠勤";
-                    $("#actualWorkTime_" + i).html(actualWorkTime[i]);
-                    totalHoliday = totalHoliday + 1;
-                    $("#totalHoliday").html(totalHoliday);
-                }else{
-                    actualWorkStartTime = rs.rows.item(i).actual_work_start_time;
-                    actualWorkEndTime = rs.rows.item(i).actual_work_end_time;
-                    var end_h;
-                    var end_m;
-                    var start_h;
-                    var start_m;
-                    
-                    var st = '　 　';
-                    if (actualWorkStartTime != null) {
-                        start_h = actualWorkStartTime.substring(0, 2);
-                        start_m = actualWorkStartTime.substring(2, 4);
-                        st = start_h + ":" + start_m;
-                    }
-                    var ed = '　 　';
-                    if (actualWorkEndTime != null) {
-                        end_h = actualWorkEndTime.substring(0, 2);
-                        end_m = actualWorkEndTime.substring(2, 4);
-                        ed = end_h + ":" + end_m;
-                    }
-                    //勤務時間
-                    var kinmuTime = 0;
-                    var kinmuTimeText = 0;
-                    if (actualWorkStartTime != null && actualWorkEndTime != null) {
-                        kinmuTime = ((parseInt(end_h) * 60) + parseInt(end_m) - (parseInt(start_h) * 60) - parseInt(start_m))/60;
-                        kinmuTimeText = Math.round((kinmuTime - (basicBreakTime/60)) *100)/100;
-                    }
-                    
-                    actualWorkTime[i] =" 　" + st + "　～　" + ed + "　[ " + kinmuTimeText + "h ]";
-                    $("#actualWorkTime_" + i).html(actualWorkTime[i]);
-                    totalTime += kinmuTimeText;
+                
+        execSQL(db, dailySql, [], function (rs) {            
+            
+            // 1か月の日数分for文で繰り返す
+            for (var i = 0; i < thisMonthDay; i++) {
+                var cellDay = i + 1;  //日時
+                
+                // 日時と今日の日付が同じであれば、バーの色を変える
+                if (cellDay == dd) {
+                    var dLineId = '<div class="dateContent dLine" id="today"></div>';
+                } else {
+                    var dLineId = '<div class="dateContent dLine"></div>';
                 }
+                monthDate = ('0' + mm).slice(-2) + "." + ('0' + (i + 1)).slice(-2);
+                
+                // 出勤時間と退勤時間を取得
+                actualWorkStartTime[i] = rs.rows.item(i).actual_work_start_time;
+                actualWorkEndTime[i] = rs.rows.item(i).actual_work_end_time;
+                
+                //出勤時間を時と分で区切る
+                if (actualWorkStartTime[i] != null) {
+                    start_h[i] = actualWorkStartTime[i].substring(0, 2);
+                    start_m[i] = actualWorkStartTime[i].substring(2, 4);
+                }
+                
+                //退勤時間を時と分で区切る
+                if (actualWorkEndTime[i] != null) {
+                    end_h[i] = actualWorkEndTime[i].substring(0, 2);
+                    end_m[i] = actualWorkEndTime[i].substring(2, 4);
+                }
+                
+                //勤務時間を計算する
+                if (actualWorkStartTime[i] != null && actualWorkEndTime[i] != null) {
+                    kinmuTime[i] = ((parseInt(end_h[i]) * 60) + parseInt(end_m[i]) - (parseInt(start_h[i]) * 60) - parseInt(start_m[i]))/60;
+                    kinmuTimeText[i] = Math.round((kinmuTime[i] - (basicBreakTime/60)) *100)/100;
+                } else {
+                    kinmuTimeText[i] = 0;
+                }
+                
+                //メモ欄を取得
+                remark[i] = rs.rows.item(i).remark;
+                // メモ欄が空であれば空文字、10文字以内であればそのまま表示、11文字以上は3点リーダーにする
+                if (remark[i] == null) {
+                    remark[i] = "";
+                } else if (remark[i].length > 10) {
+                    remark[i] = remark[i].substring(0, 10) + "...";
+                }
+                
+                //休暇アイコンの表示、非表示
+                work_div = rs.rows.item(i).work_div;
+                if (work_div != 0) {
+                    vacation_icon = '<span class="vacation disp"><img class="icon" src="images/heart-on-human-16.png"/></span>';                        
+                } else {
+                    vacation_icon = '<span class="vacation hidden"><img class="icon" src="images/heart-on-human-16.png"/></span>';
+                }
+                
+                // monthly.htmlの作成
+                var monthlyHtml = '<li class="oneDay" data-day="' + cellDay + '" onclick="app.slidingMenu.setMainPage(' + "'" + 'daily.html' + "'" +', {closeMenu: true})">' + 
+                    '<div class="dayWrapper">' + 
+                        dLineId + 
+                        '<div class="dateContent dContent">' + 
+                            '<div>' + 
+                                '<span class="monthDate">' + monthDate + '</span>' + 
+                                vacation_icon + 
+                            '</div>' + 
+                            '<div>' + 
+                                '<ons-icon class="icon" icon="fa-briefcase"></ons-icon>' + 
+                                '<span class="workTime">' + kinmuTimeText[i] + "h" + '</span>' + 
+                            '</div>' + 
+                            '<div>' + 
+                                '<ons-icon class="icon" icon="ion-clipboard"></ons-icon>' + 
+                                '<span class="memo">' + remark[i] + '</span>' + 
+                            '</div>' + 
+                        '</div>' + 
+                        '<div class="dateContent dArrow" class="icon">' + 
+                            '<span>' + 
+                             ' <ons-icon icon="fa-arrow-circle-right"></ons-icon>' + 
+                            '</span>' + 
+                        '</div>' + 
+                    '</div>' + 
+                '</li>';
+            
+                // 1日づつhtmlArrayに格納
+                htmlArray.push(monthlyHtml);
             }
-            $("#totalTime").html(totalTime);
-        }, function(error){
+            
+            // monthly.htmlのidがyeraMonth,monthlyListにそれぞれhtmlを当てはめる
+            document.getElementById("yearMonth").innerHTML = yyyy + "." + mm;
+            document.getElementById("monthlyList").innerHTML = htmlArray.join("");
+                    
+                    
+            // 生成したhtmlを適応
+            // $(".monthlyList").html(html);
+            
+            // onsen-uiのタグを有効にするためにコンパイル
+            var content = $(".monthly");
+            ons.compile(content[0]);
+        
+        // dailySqlがerrorの場合
+        }, function(error) {
             alert(error.message);
         });
-        
-    }, function(error){
+    
+    // monthlySqlがerrorの場合
+    }, function(error) {
         alert(error.message);
     });
-    
-    // 翌月が未来月の場合、進むボタンを非表示にする
-    var today = new Date();
-    var nextDate = new Date(d.getFullYear(), d.getMonth()+1, d.getDate());
-    if (today.getFullYear() < nextDate.getFullYear()) {
-        $("#nextMonth").hide();
-    } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
-        $("#nextMonth").hide();
-    } else {
-        $("#nextMonth").show();
-    }
-
 }
 
 // ----------------------------------------------------------------------
