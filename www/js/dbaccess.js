@@ -6,15 +6,15 @@ function createDB(){
 }
 
 function createDBQuery(tx) {
-    // t_monthlyテーブルの作成
-    tx.executeSql("CREATE TABLE IF NOT EXISTS t_monthly ("+
-        "work_month TEXT NOT NULL,"+
-        "basic_work_start_time TEXT(4) DEFAULT '0900',"+
-        "basic_work_end_time TEXT(4) DEFAULT '1800',"+
-        "basic_break_start_time TEXT(4) DEFAULT '1200',"+
-        "basic_break_end_time TEXT(4) DEFAULT '1300',"+
-        "CONSTRAINT pk_t_monthly PRIMARY KEY (work_month))"
-    );
+    
+    // t_monthlyテーブルの作成        
+	tx.executeSql("CREATE TABLE IF NOT EXISTS t_monthly ("+
+		"work_month TEXT NOT NULL,"+
+		"basic_work_start_time TEXT(4) DEFAULT '0900',"+
+		"basic_work_end_time TEXT(4) DEFAULT '1800',"+
+		"basic_break_time TEXT(4) DEFAULT '0100',"+
+		"CONSTRAINT pk_t_monthly PRIMARY KEY (work_month))"
+		);
     // t_dailyテーブルの作成
     tx.executeSql("CREATE TABLE IF NOT EXISTS t_daily ("+
         "work_month TEXT NOT NULL,"+

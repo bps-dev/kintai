@@ -380,22 +380,12 @@ function setMonthlyFirstTime(d) {
     
     execSQL(db, monthlySql, [], function(rs){
         
-        // 休憩時間の開始時間と終了時間を取得
-        var firstbasicBreakStartTime = rs.rows.item(0).basic_break_start_time;
-        var firstbasicBreakEndTime = rs.rows.item(0).basic_break_end_time;
-        
-        // 休憩時間の開始時間と終了時間を時と分で区切る
-        var firstbasicBreakStartTime1 = firstbasicBreakStartTime.substring(0, 2);
-        var firstbasicBreakStartTime2 = firstbasicBreakStartTime.substring(2, 4);
-        var firstbasicBreakEndTime1 = firstbasicBreakEndTime.substring(0, 2);
-        var firstbasicBreakEndTime2 = firstbasicBreakEndTime.substring(2, 4);
-        
-        // 休憩時間を計算する
-        var basicBreakTime = (parseInt(firstbasicBreakEndTime1) * 60)
-                            + parseInt(firstbasicBreakEndTime2)
-                            - (parseInt(firstbasicBreakStartTime1) * 60)
-                            - parseInt(firstbasicBreakStartTime2);
-        
+        var basicBreakTimeTmp = rs.rows.item(0).basic_break_time;
+        var basicBreakTime1 = basicBreakTimeTmp.substring(0, 2);
+        var basicBreakTime2 = basicBreakTimeTmp.substring(2, 4);
+        var basicBreakTime = (parseInt(basicBreakTime1) * 60)
+                                    + parseInt(basicBreakTime2);
+
         // 出勤時間と退勤時間を選択
         var dailySql = "SELECT * FROM t_daily"
                 + " WHERE work_month = "
@@ -532,8 +522,9 @@ function setFirstTime() {
     var ymWk = ymdWk.substring(0, 6);         // 処理年月  （YYYYMM）
     var firstbasicWorkStartTime;    //初期基本勤務開始時間
     var firstbasicWorkEndTime;        //初期基本勤務終了時間
-    var firstbasicBreakStartTime;　//初期基本休憩開始時間
-    var firstbasicBreakEndTime;      //初期基本休憩終了時間
+    // var firstbasicBreakStartTime;　//初期基本休憩開始時間
+    // var firstbasicBreakEndTime;      //初期基本休憩終了時間
+    var firstbasicBreakTime;  // 初期休憩時間
     
     // DB接続
     var db = openDb("Database", "1.0", "KintaiDatabase", 200000);
@@ -544,17 +535,16 @@ function setFirstTime() {
             + "(SELECT MAX(work_month) FROM t_monthly)"; 
 
     execSQL(db, sql, [], function(rs){
+        
         if(rs.rows.length === 0){
             firstbasicWorkStartTime = "0900";
             firstbasicWorkEndTime = "1800";
-            firstbasicBreakStartTime = "1200";
-            firstbasicBreakEndTime = "1300";
+            firstbasicBreakTime = "0100";
         }else{
             firstbasicWorkStartTime = rs.rows.item(0).basic_work_start_time;
             firstbasicWorkEndTime = rs.rows.item(0).basic_work_end_time;
-            firstbasicBreakStartTime = rs.rows.item(0).basic_break_start_time;
-            firstbasicBreakEndTime = rs.rows.item(0).basic_break_end_time;
-             
+            firstbasicBreakTime = rs.rows.item(0).basic_break_time;
+            
             var firstbasicWorkStartTime1 = firstbasicWorkStartTime.substring(0, 2);
             var firstbasicWorkStartTime2 = firstbasicWorkStartTime.substring(2, 4);                 
             firstbasicWorkStartTime = firstbasicWorkStartTime1 + ":" +firstbasicWorkStartTime2;
@@ -563,23 +553,15 @@ function setFirstTime() {
             var firstbasicWorkEndTime2 = firstbasicWorkEndTime.substring(2, 4);                 
             firstbasicWorkEndTime = firstbasicWorkEndTime1 + ":" +firstbasicWorkEndTime2;
             
-            var firstbasicBreakStartTime1 = firstbasicBreakStartTime.substring(0, 2);
-            var firstbasicBreakStartTime2 = firstbasicBreakStartTime.substring(2, 4);                 
-            firstbasicBreakStartTime = firstbasicBreakStartTime1 + ":" +firstbasicBreakStartTime2;
-                
-            var firstbasicBreakEndTime1 = firstbasicBreakEndTime.substring(0, 2);
-            var firstbasicBreakEndTime2 = firstbasicBreakEndTime.substring(2, 4);                 
-            firstbasicBreakEndTime = firstbasicBreakEndTime1 + ":" +firstbasicBreakEndTime2;
-
-            // document.getElementById("basicWorkStartTime").value = firstbasicWorkStartTime;    //基本勤務開始時間の初期値設定
-            // document.getElementById("basicWorkEndTime").value = firstbasicWorkEndTime;        //基本勤務終了時間の初期値設定
-            // document.getElementById("basicBreakStartTime").value = firstbasicBreakStartTime;　//基本休憩開始時間の初期値設定
-            // document.getElementById("basicBreakEndTime").value = firstbasicBreakEndTime;      //基本休憩終了時間の初期値設定
-             
+            // TODO 入力および表示形式により変更する
+            // var firstbasicBreakTime1 = firstbasicBreakTime.substring(0, 2);
+            // var firstbasicBreakTime2 = firstbasicBreakTime.substring(2, 4);                 
+            // var basicBreakTime = firstbasicBreakTime1 + (firstbasicBreakTime2;
+            
             $("#basicWorkStartTime").html(firstbasicWorkStartTime);
             $("#basicWorkEndTime").html(firstbasicWorkEndTime);
-            $("#basicBreakStartTime").html(firstbasicBreakStartTime);
-            $("#basicBreakEndTime").html(firstbasicBreakEndTime);
+
+            $("#basicBreakTime").val(firstbasicBreakTime);
         }  
     }, function(error){
         alert(error.message);
@@ -593,16 +575,10 @@ function setTime() {
 
     var basicWorkStartTime = $("#basicWorkStartTime").html();　　　　//基本勤務開始時間
     var basicWorkEndTime = $("#basicWorkEndTime").html();　　　　　　//基本勤務終了時間
-    var basicBreakStartTime = $("#basicBreakStartTime").html();　　 　//基本休憩開始時間
-    var basicBreakEndTime = $("#basicBreakEndTime").html();　　　　 　//基本休憩終了時間
-    
+    var basicBreakTime = $("#basicBreakTime").val();　　 　         //基本休憩時間
+        
     if (basicWorkStartTime == "" || basicWorkEndTime == ""){
         alert("基本作業時間が入力されていません");
-        return;
-    }
-    
-    if(basicBreakStartTime == "" ||  basicBreakEndTime == ""){
-        alert("休憩時間が入力されていません");
         return;
     }
     
@@ -611,20 +587,22 @@ function setTime() {
         return;
     }
     
-    if(basicBreakStartTime > basicBreakEndTime){
-        alert("休憩時間が正しくありません");
+    if (basicBreakTime == "" ){
+        alert("休憩時間が入力されていません");
         return;
-    }
-    
-    if(basicBreakStartTime < basicWorkStartTime || basicBreakEndTime > basicWorkEndTime){
-        alert("休憩時間が正しくありません2");
-        return;    
+    }else{
+        try{
+            if (basicBreakTime.parseInt > 0 ) {
+                alert("休憩時間に正数を入力してください");
+            return;        
+            }        
+        }catch(e){
+            alert("休憩時間に正数を入力してください");
+        }
     }
     
     basicWorkStartTime = basicWorkStartTime.replace(':', '');
     basicWorkEndTime = basicWorkEndTime.replace(':', '');
-    basicBreakStartTime = basicBreakStartTime.replace(':', '');
-    basicBreakEndTime = basicBreakEndTime.replace(':', '');
     
     var d = new Date();         
     var ymdWk = comDateFormat(d, "yyyyMMdd"); // 処理年月日（YYYYMMDD）
@@ -636,10 +614,9 @@ function setTime() {
     // 基本勤務始業時間を更新
     var sql = "UPDATE t_monthly SET basic_work_start_time = '" + basicWorkStartTime 
               + "', basic_work_end_time = '" + basicWorkEndTime
-              + "', basic_break_start_time = '" + basicBreakStartTime
-              + "', basic_break_end_time = '" + basicBreakEndTime
+              + "',  basic_break_time = '" + basicBreakTime + "'";
               + "' WHERE work_month =  '" + ymWk + "'"; 
-              
+
     execSQL(db, sql, [], function(rs){
         alert("変更した設定は今月から反映されます。");
     }, function(error){
