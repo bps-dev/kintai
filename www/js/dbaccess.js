@@ -79,7 +79,7 @@ function successCB() {
 
 // 今月のレコードが月次テーブルにあるかチェック
 // 無ければ、レコードを作成
-function checkThisMonthRecord() {
+function checkThisMonthRecord(yearMonth, callback) {
     console.log("checkThisMonthRecord start");
     var db = window.openDatabase("Database", "1.0", "KintaiDatabase", 200000);
     
@@ -92,6 +92,11 @@ function checkThisMonthRecord() {
         mm = "0" + mm;
     }
     var work_month = yyyy + "" + mm;
+    
+    // 引数ありの場合は引数の月をSELECT
+    if(yearMonth != null){
+        work_month = yearMonth;
+    }
     
     var lastDate = new Date();
     lastDate.setDate(0);
@@ -119,37 +124,42 @@ function checkThisMonthRecord() {
                     sql = "INSERT INTO t_monthly(work_month) VALUES ("
                         + work_month
                         +")";
-                    execSQL(db, sql, [], function(rs) {
-                    });
                 } else {
                     // 先月のレコードが存在する場合、先月の基本勤務始業時間等を使ってINSERT
-                    sql = "INSERT INTO t_monthly(work_month, basic_work_start_time, basic_work_end_time, basic_break_start_time, basic_break_end_time) VALUES ("
+                    sql = "INSERT INTO t_monthly(work_month, basic_work_start_time, basic_work_end_time, basic_break_time) VALUES ("
                         + work_month + ", "
                         + "'"+ rs.rows.item(0).basic_work_start_time + "',"
                         + "'"+ rs.rows.item(0).basic_work_end_time + "',"
-                        + "'"+ rs.rows.item(0).basic_break_start_time + "',"
-                        + "'"+ rs.rows.item(0).basic_break_end_time + "'"
+                        + "'"+ rs.rows.item(0).basic_break_time + "'"
                         +")";
-                    execSQL(db, sql, [], function(rs) {
-                    });
                 }
-                for (var i = 1; i <= 31; i++) {
-                    // 1ヶ月分のt_dailyデータをINSERT。
-                    // TODO:休暇区分はDate.getDay()を使用して求める
-                    if (i < 10) {
-                        i = "0" + i;
+                execSQL(db, sql, [], function(rs) {
+                    for (var i = 1; i <= 31; i++) {
+                        // 1ヶ月分のt_dailyデータをINSERT。
+                        // TODO:休暇区分はDate.getDay()を使用して求める
+                        if (i < 10) {
+                            i = "0" + i;
+                        }
+                        var work_date = work_month + "" + i;
+                        sql = "INSERT INTO t_daily(work_month, work_date) VALUES (" + work_month + ", " + work_date + ")";
+                        execSQL(db, sql, [], function(rs){
+                            // コールバック関数があればコールバック
+                            if($.isFunction(callback)){
+                                callback();
+                            }
+                        });
                     }
-                    var work_date = work_month + "" + i;
-                    sql = "INSERT INTO t_daily(work_month, work_date) VALUES (" + work_month + ", " + work_date + ")";
-                    execSQL(db, sql, [], function(rs){});
-                }
-                
+                });
             }, function(error) {
                 alert(error.message);
             });
 
         } else {
             // 今月のレコードが存在する場合、何もしない
+            // コールバック関数があればコールバック
+            if($.isFunction(callback)){
+                callback();
+            }
         }
     }, function(error) {
         alert(error.message);
@@ -173,8 +183,7 @@ function checkAllMonthQuerySuccess(tx, results) {
         console.log("行 = " + i + " work_month = " + results.rows.item(i).work_month
         + " basic_work_start_time = " + results.rows.item(i).basic_work_start_time
         + " basic_work_end_time = " + results.rows.item(i).basic_work_end_time
-        + " basic_break_start_time = " + results.rows.item(i).basic_break_start_time
-        + " basic_break_end_time = " + results.rows.item(i).basic_break_end_time
+        + " basic_break_time = " + results.rows.item(i).basic_break_time
         );
     }  
 }

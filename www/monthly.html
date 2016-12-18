@@ -10,11 +10,21 @@
                 <ons-icon icon="fa-pencil-square-o"></ons-icon>
             </ons-toolbar-button>
           </div>
-          <div class="center" id="yearMonth"></div>
         </ons-toolbar>
         <div class="monthly">
+            <div id="header_wrap">
+                <div id="header">
+                    <ons-button modifier="quiet" id="backMonth">
+                       <ons-icon icon="fa fa-play" size="25px" rotate="180"></ons-icon>
+                    </ons-button>
+                    <span id="yearMonth"></span>
+                    <ons-button modifier="quiet" id="nextMonth">
+                        <ons-icon icon="fa fa-play" size="25px"></ons-icon>
+                    </ons-button>
+                </div>
+            </div>
             <ul class="monthlyList" id="monthlyList">
             </ul>
         </div>
     </ons-page>
-</ons-navigator>
+</ons-navigator>

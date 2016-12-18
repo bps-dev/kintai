@@ -278,13 +278,21 @@ document.addEventListener("pageinit", function(e) {
         // 「先月」ボタン押下時のイベント
         $('#backMonth').click(function() {
             d.setMonth(d.getMonth() - 1);
-            setMonthlyFirstTime(d);
+            
+            var yearMonth = comDateFormat(d, "yyyyMM");
+            checkThisMonthRecord(yearMonth, function(){
+                setMonthlyFirstTime(d);
+            });
         });
         
         // 「来月」ボタン押下時のイベント
         $('#nextMonth').click(function() {
             d.setMonth(d.getMonth() + 1);
-            setMonthlyFirstTime(d);
+            
+            var yearMonth = comDateFormat(d, "yyyyMM");
+            checkThisMonthRecord(yearMonth, function(){
+                setMonthlyFirstTime(d);
+            });
         });
         
         // 「遷移」ボタン押下時のイベント
@@ -374,7 +382,7 @@ function setMonthlyFirstTime(d) {
     // DB接続
     var db = openDb("Database", "1.0", "KintaiDatabase", 200000);
     
-    // 前月の基本勤務時間と基本休憩時間を選択
+    // 今月の基本勤務時間と基本休憩時間を選択
     var monthlySql = "SELECT * FROM t_monthly" 
             + " WHERE work_month = " + ymWk;
     
@@ -396,14 +404,18 @@ function setMonthlyFirstTime(d) {
             // 1か月の日数分for文で繰り返す
             for (var i = 0; i < thisMonthDay; i++) {
                 var cellDay = i + 1;  //日時
+                monthDate = ('0' + mm).slice(-2) + "." + ('0' + (i + 1)).slice(-2);
+                
+                var tmpToday = new Date();
+                tmpToday = comDateFormat(tmpToday, "yyyyMM.dd");
                 
                 // 日時と今日の日付が同じであれば、バーの色を変える
-                if (cellDay == dd) {
+                if (yyyy + monthDate == tmpToday) {
                     var dLineId = '<div class="dateContent dLine" id="today"></div>';
                 } else {
                     var dLineId = '<div class="dateContent dLine"></div>';
                 }
-                monthDate = ('0' + mm).slice(-2) + "." + ('0' + (i + 1)).slice(-2);
+                
                 
                 // 出勤時間と退勤時間を取得
                 actualWorkStartTime[i] = rs.rows.item(i).actual_work_start_time;
@@ -497,6 +509,17 @@ function setMonthlyFirstTime(d) {
     }, function(error) {
         alert(error.message);
     });
+    
+    // 翌月が未来月の場合、進むボタンを非表示にする
+    var today = new Date();
+    var nextDate = new Date(d.getFullYear(), d.getMonth()+1, d.getDate());
+    if (today.getFullYear() < nextDate.getFullYear()) {
+        $("#nextMonth").css('visibility','hidden');
+    } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
+        $("#nextMonth").css('visibility','hidden');
+    } else {
+        $("#nextMonth").css('visibility','visible');
+    }
 }
 
 // ----------------------------------------------------------------------
