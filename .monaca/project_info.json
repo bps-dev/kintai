@@ -1,22 +1,28 @@
 {
     "plugins": [
-        "mobi.monaca.plugins.Monaca",
-        "mobi.monaca.plugins.datepicker",
-        "mobi.monaca.plugins.WebIntent"
+        "mobi.monaca.plugins.Monaca@3.1.0",
+        "mobi.monaca.plugins.datepicker@1.0.1",
+        "mobi.monaca.plugins.WebIntent@1.0.0"
     ],
     "framework_version": "3.5",
-    "xcode_version": "6",
-    "cordova_version": "5.2",
-    "plugin_settings": [],
-    "title-ja": "ああああ",
+    "xcode_version": "7",
+    "cordova_version": "6.2",
+    "plugin_settings": {
+        "cordova-plugin-crosswalk-webview": {
+            "variables": [
+                "XWALK_VERSION=18.48.477.13"
+            ]
+        }
+    },
+    "title-ja": "",
     "title-en": "",
-    "description-ja": "あああ",
+    "description-ja": "",
     "description-en": "",
     "category": "User Template",
     "platform": [],
-    "name": "generated-1466241493-565569a2fd1734984b2af208",
+    "name": "generated-1482035070-565569a2fd1734984b2af208",
     "external_plugins": [
-        "cordova-plugin-splashscreen@2.1.0",
-        "cordova-plugin-whitelist@1.0.0"
+        "cordova-plugin-splashscreen@3.2.2",
+        "cordova-plugin-whitelist@1.2.2"
     ]
 }
