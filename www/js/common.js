@@ -1246,8 +1246,7 @@ function sendMail() {
         + " t_daily.actual_work_end_time, "
         + " t_daily.work_div, "
         + " t_daily.remark, "
-        + " t_monthly.basic_break_start_time, "
-        + " t_monthly.basic_break_end_time "
+        + " t_monthly.basic_break_time "
         + " FROM t_daily LEFT JOIN t_monthly "
         + " ON t_daily.work_month = t_monthly.work_month"
         + " WHERE t_daily.work_month = " + yearMonth;
@@ -1293,29 +1292,13 @@ function sendMail() {
                 // 休憩時間
                 if (item.actual_work_start_time == "" || item.actual_work_start_time == null
                     || item.actual_work_end_time == "" || item.actual_work_end_time == null
-                    || item.basic_break_start_time == "" || item.basic_break_start_time == null
-                    || item.basic_break_end_time == "" || item.basic_break_end_time == null) {
+                    || item.basic_break_time == "" || item.basic_break_time == null) {
                         body = body + ",";
                         
                 } else {
-                    // 基本休憩終了時間　<= 出勤
-                    if (item.basic_break_start_time <= item.actual_work_start_time) {
-                        body = body + "00:00" + ",";
-                        
-                    // 出勤 < 基本休憩開始時間 かつ 基本休憩終了時間 < 退勤
-                    } else if (item.actual_work_start_time < item.basic_break_start_time
-                        && item.basic_break_end_time < item.actual_work_end_time) {
-                            breakTime = "0" + (item.basic_break_end_time - item.basic_break_start_time);
-                            body = body + (breakTime).substring(0,2) + ":"
-                                + (breakTime).substring(2,4) + ",";
-                                
-                    // 基本休憩開始時間 < 出勤 かつ 基本休憩終了時間 <= 退勤
-                    } else if (item.basic_break_start_time < item.actual_work_start_time
-                        && item.basic_break_end_time <= item.actual_work_end_time) {
-                            breakTime = "00" + item.basic_break_end_time - item.actual_work_start_time;
-                            body = body + breakTime.substring(0,2) + ":" 
-                                + breakTime.substring(2,4) + ",";
-                    } 
+                        breakTime = item.basic_break_time;
+                        body = body + breakTime.substring(0,2) + ":" 
+                            + breakTime.substring(2,4) + ",";
                 }
                 
                 // 勤務区分
