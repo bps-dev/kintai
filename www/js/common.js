@@ -290,11 +290,6 @@ document.addEventListener("pageinit", function(e) {
             onConfirm(1);
         });
     }
-    
-    if (e.target.id == "splash_page") {
-        setTimeout(app.slidingMenu.setMainPage('monthly.html', {closeMenu: true}), 3000);
-        
-    }
 }, false);
 
 //月次画面から日次画面を取得

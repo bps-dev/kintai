@@ -20,7 +20,7 @@
     "description-en": "",
     "category": "User Template",
     "platform": [],
-    "name": "generated-1482118661-565569a2fd1734984b2af208",
+    "name": "generated-1482633629-565569a2fd1734984b2af208",
     "external_plugins": [
         "cordova-plugin-splashscreen@3.2.2",
         "cordova-plugin-whitelist@1.2.2"
