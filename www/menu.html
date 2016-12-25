@@ -4,21 +4,21 @@
 
         <ons-list-item
             modifier="tappable" class="list__item__line-height"
-            onclick="app.slidingMenu.setMainPage('daily.html', {closeMenu: true})">
+            onclick="myNavigator.replacePage('daily.html', { animation : 'slide' } )">
             <i class="fa fa-pencil-square-o fa-1g" style="color: #666"></i>
             &nbsp; 勤怠入力
         </ons-list-item>
 
         <ons-list-item
             modifier="tappable" class="list__item__line-height"
-            onclick="app.slidingMenu.setMainPage('csvmail.html', {closeMenu: true})">
+            onclick="myNavigator.replacePage('csvmail.html', { animation : 'slide' } )">
             <i class="fa fa-envelope-o fa-1g" style="color: #666"></i>
             &nbsp; メールでCSV送信
         </ons-list-item>
 
         <ons-list-item
             modifier="tappable" class="list__item__line-height"
-            onclick="app.slidingMenu.setMainPage('setting.html', {closeMenu: true})">
+            onclick="myNavigator.replacePage('setting.html', { animation : 'slide' } )">
             <i class="fa fa-gear fa-lg" style="color: #666"></i>
             &nbsp; 設定
         </ons-list-item>

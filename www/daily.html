@@ -6,7 +6,7 @@
         </div>
         <div class="right">
             <!-- 日月切替ボタン -->
-            <ons-toolbar-button ng-click="app.slidingMenu.setMainPage('monthly.html', {closeMenu: true})">
+            <ons-toolbar-button ng-click="myNavigator.replacePage('monthly.html', { animation : 'slide' } )">
                 <ons-icon icon="fa-calendar"></ons-icon>
             </ons-toolbar-button>
         </div>
@@ -19,22 +19,22 @@
     <div id="daily_main_area">
         <!-- 作業時間 -->
             <section id="work_time_input_area">
-	          <div id="work_time">
-	          	<span><img src="images/time-16.png" alt="clock" />作業時間</span>
-	         	</div>
-	          <div class="dailyTimeWrapper">
-	          	<div class="dTime attendance">
-	          		<p>出勤</p>
-	          		<div class="timePicker" id="actual_work_start_time" />
-	          	</div>
-	          	<div class="dTime">
-	          	</div>
-	          	<div class="dTime leaving">
-	          		<p>退勤</p>
-	          		<div class="timePicker" id="actual_work_end_time" />
-	          	</div>
-	          </div>
-	        </section>
+                <div id="work_time">
+                    <span><img src="images/time-16.png" alt="clock">作業時間</span>
+                </div>
+                <div class="dailyTimeWrapper">
+                    <div class="dTime attendance">
+                        <p>出勤</p>
+                        <div class="timePicker" id="actual_work_start_time"></div>
+                    </div>
+                    <div class="dTime">
+                    </div>
+                    <div class="dTime leaving">
+                        <p>退勤</p>
+                        <div class="timePicker" id="actual_work_end_time"></div>
+                    </div>
+                </div>
+            </section>
         
         <!-- 休暇アイコン -->
         <section type="hidden"id="holiday_view">

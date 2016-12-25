@@ -170,6 +170,9 @@ function dateClear() {
 }
 
 document.addEventListener("pageinit", function(e) {
+    // メニューを閉じる
+    app.slidingMenu.closeMenu()
+    
     if (e.target.id == "daily_page") {
         // 日次画面のイベント処理
         checkThisMonthRecord();
@@ -290,6 +293,10 @@ document.addEventListener("pageinit", function(e) {
             onConfirm(1);
         });
     }
+    if (e.target.id == "splash_page") {
+        setTimeout(function(){myNavigator.replacePage('monthly.html', { animation : 'slide' } );}, 3000);
+    }
+
 }, false);
 
 //月次画面から日次画面を取得
@@ -471,7 +478,7 @@ function setMonthlyFirstTime(d) {
                 }
                 
                 // monthly.htmlの作成
-                var monthlyHtml = '<li class="oneDay" data-day="' + cellDay + '" onclick="app.slidingMenu.setMainPage(' + "'" + 'daily.html' + "'" +', {closeMenu: true})">' + 
+                var monthlyHtml = '<li class="oneDay" data-day="' + cellDay + '" onclick="myNavigator.replacePage(' + "'" + 'daily.html' + "'" +', { animation : ' + "'" + 'slide' + "'" + ' } )">' + 
                     '<div class="dayWrapper">' + 
                         dLineId + 
                         '<div class="dateContent dContent">' + 
