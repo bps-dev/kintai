@@ -190,63 +190,9 @@ document.addEventListener("pageinit", function(e) {
             }
         });
         
-        // 翌日が未来月の場合、進むボタンを非表示にする
-        var today = new Date();
-        var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate() + 1);
-        if (today.getFullYear() < nextDate.getFullYear()) {
-            $("#nextDay").hide();
-        } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
-            $("#nextDay").hide();
-        } else {
-            $("#nextDay").show();
-        }
-
-        
         //備考欄のイベント処理
         $("#anote").blur(function() {
             setRemark();
-        });
-        
-        // 「先日」ボタン押下時のイベント
-        $('#backDay').click(function() {
-            thisDate.setDate(thisDate.getDate() - 1);
-            displayDailyData2(thisDate);
-            //出勤時間、退勤時間を取得
-            displayDailyData();
-            //欠勤状態を取得
-            setHoridayText();
-            
-            // 翌日が未来月の場合、進むボタンを非表示にする
-            var today = new Date();
-            var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate() + 1);
-            if (today.getFullYear() < nextDate.getFullYear()) {
-                $("#nextDay").hide();
-            } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
-                $("#nextDay").hide();
-            } else {
-                $("#nextDay").show();
-            }
-        });
-        
-        // 「翌日」ボタン押下時のイベント
-        $('#nextDay').click(function() {
-            thisDate.setDate(thisDate.getDate() + 1);
-            displayDailyData2(thisDate);
-            //出勤時間、退勤時間を取得
-            displayDailyData();
-            //欠勤状態を取得
-            setHoridayText();
-            
-            // 翌日が未来月の場合、進むボタンを非表示にする
-            var today = new Date();
-            var nextDate = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate() + 1);
-            if (today.getFullYear() < nextDate.getFullYear()) {
-                $("#nextDay").hide();
-            } else if ((today.getFullYear() == nextDate.getFullYear()) && (today.getMonth() < nextDate.getMonth())) {
-                $("#nextDay").hide();
-            } else {
-                $("#nextDay").show();
-            }
         });
         
         // 月次画面の日付押下時のイベント
@@ -344,6 +290,11 @@ document.addEventListener("pageinit", function(e) {
             onConfirm(1);
         });
     }
+    
+    if (e.target.id == "splash_page") {
+        setTimeout(app.slidingMenu.setMainPage('monthly.html', {closeMenu: true}), 3000);
+        
+    }
 }, false);
 
 //月次画面から日次画面を取得
@@ -381,13 +332,79 @@ function setMonthlyFirstTime(d) {
     
     // DB接続
     var db = openDb("Database", "1.0", "KintaiDatabase", 200000);
+    // 先にDBに今月のレコードの有無をチェック
+    var monthlyFirstSql = "SELECT * FROM t_monthly" 
+            + " WHERE work_month = " + ymWk;
     
+    execSQL(db, monthlyFirstSql, [], function(rs) {
+        var monthlen = 0;
+        monthlen = rs.rows.length;
+        if (monthlen > 0) {
+            // レコードがあるため何もしない
+        } else {
+            sql = "INSERT INTO t_monthly(work_month) VALUES ('"+ work_month + "')";
+            execSQL(db, sql, [], function(rs){
+                var monthLastDay = 0;
+                switch (mm){
+                  case "01":
+                  case "03":
+                  case "05":
+                  case "07":
+                  case "08":
+                  case "10":
+                  case "12":
+                    monthLastDay = 31;
+                    break;
+                  case "04":
+                  case "06":
+                  case "09":
+                  case "11":
+                    monthLastDay = 30;
+                    break;
+                  case "02":
+                    var yearInt = Number(yyyy);
+                    var yearSurplus = yearInt % 4;
+                    var yearSurplus100 = yearInt % 100;
+                    var yearSurplus400 = yearInt % 400;
+                    
+                    if (yearSurplus === 0 || yearSurplus400 === 0) {
+                        if (yearSurplus100 === 0) {
+                            // うるう年じゃない
+                            monthLastDay = 28;
+                            break;
+                        }
+                        // うるう年
+                        monthLastDay = 29;
+                        break;
+                        
+                    } else {
+                        // うるう年じゃない
+                        monthLastDay = 28;
+                        break;
+                    }
+                }
+                for (var i = 1; i <= monthLastDay; i++) {
+                    // 1ヶ月分のt_dailyデータをINSERT。
+                    if (i < 10) {
+                        i = "0" + i;
+                    }
+                    var work_date = work_month + "" + i;
+                    sql = "INSERT INTO t_daily(work_month, work_date) VALUES (" + work_month + ", " + work_date + ")";
+                    execSQL(db, sql, [], function(rs){});
+                }
+            });
+        }
+    });
     // 今月の基本勤務時間と基本休憩時間を選択
     var monthlySql = "SELECT * FROM t_monthly" 
             + " WHERE work_month = " + ymWk;
     
     execSQL(db, monthlySql, [], function(rs) {
-        
+        var len = rs.rows.length;
+        if (len > 0) {
+        } else {
+            
+        }
         var basicBreakTimeTmp = rs.rows.item(0).basic_break_time;
         var basicBreakTime1 = basicBreakTimeTmp.substring(0, 2);
         var basicBreakTime2 = basicBreakTimeTmp.substring(2, 4);
@@ -813,21 +830,68 @@ function displayDailyData() {
             $("#actual_work_start_time").html(disp_actual_work_start_time);
             $("#actual_work_end_time").html(disp_actual_work_end_time);
             $(".remark_textarea").val(rs.rows.item(0).remark);
+            
+            var holidayDiv = rs.rows.item(0).work_div;
+            if (holidayDiv == "1") {      //欠勤区分が欠勤（work_div=1）の場合
+                $("#holiday_view").show();
+            } else {        //欠勤区分が勤務（work_div=0）の場合
+                $("#holiday_view").hide();
+            }
         } else {
             sql = "INSERT INTO t_monthly(work_month) VALUES ('"+ work_month + "')";
-            execSQL(db, sql, [], function(rs){});
-            for (var i = 1; i <= 31; i++) {
-                // 1ヶ月分のt_dailyデータをINSERT。
-                if (i < 10) {
-                    i = "0" + i;
+            execSQL(db, sql, [], function(rs){
+                var monthLastDay = 0;
+                switch (式){
+                  case "01":
+                  case "03":
+                  case "05":
+                  case "07":
+                  case "08":
+                  case "10":
+                  case "12":
+                    monthLastDay = 31;
+                    break;
+                  case "04":
+                  case "06":
+                  case "09":
+                  case "11":
+                    monthLastDay = 30;
+                    break;
+                  case "02":
+                    var yearSurplus = year % 4;
+                    var yearSurplus100 = year % 100;
+                    var yearSurplus400 = year % 400;
+                    
+                    if (yearSurplus === 0 || yearSurplus400 === 0) {
+                        if (yearSurplus100 === 0) {
+                            // うるう年じゃない
+                            monthLastDay = 28;
+                            break;
+                        }
+                        // うるう年
+                        monthLastDay = 29;
+                        break;
+                        
+                    } else {
+                        // うるう年じゃない
+                        monthLastDay = 28;
+                        break;
+                    }
                 }
-                var work_date = work_month + "" + i;
-                sql = "INSERT INTO t_daily(work_month, work_date) VALUES (" + work_month + ", " + work_date + ")";
-                execSQL(db, sql, [], function(rs){});
-            }
-            // 出勤ボタンを表示する
-            $(".work_start_button").show();
-            $(".work_start_input").removeAttr("disabled");
+                for (var i = 1; i <= monthLastDay; i++) {
+                    // 1ヶ月分のt_dailyデータをINSERT。
+                    if (i < 10) {
+                        i = "0" + i;
+                    }
+                    var work_date = work_month + "" + i;
+                    sql = "INSERT INTO t_daily(work_month, work_date) VALUES (" + work_month + ", " + work_date + ")";
+                    execSQL(db, sql, [], function(rs){});
+                }
+                // 出勤ボタンを表示する
+                $(".work_start_button").show();
+                $(".work_start_input").removeAttr("disabled");
+                $("#holiday_view").hide();
+            });
         }
     }, function(error) {
       console.log(error.message);
@@ -879,72 +943,18 @@ function displayDailyData2(thisDate) {
             $("#actual_work_start_time").html(rs.rows.item(0).actual_work_start_time);
             $("#actual_work_end_time").html(rs.rows.item(0).actual_work_end_time);
             $(".remark_textarea").html(rs.rows.item(0).remark);
+            var holidayDiv = rs.rows.item(0).work_div;
+            if (holidayDiv == "1") {      //欠勤区分が欠勤（work_div=1）の場合
+                $("#holiday_view").show();
+            } else {        //欠勤区分が勤務（work_div=0）の場合
+                $("#holiday_view").hide();
+            }
         }
     }, function(error) {
       console.log(error.message);
     });
 
 }
-
-// ----------------------------------------------------------------------
-// 日次画面 戻るボタン押下
-// ----------------------------------------------------------------------
-function backDate() {
-    var old_yyyy = $("#disp_date").val().substring(0,4);
-    var old_mm = $("#disp_date").val().substring(4,6);
-    var old_dd = $("#disp_date").val().substring(6,8);
-    
-    var date = new Date(old_yyyy + "-" + old_mm + "-" + old_dd);
-    date.setDate(date.getDate() - 1);
-    
-    var yyyy = date.getFullYear();
-    var mm = date.getMonth() + 1;
-    var dd = date.getDate();
-        
-    // 表示中の日付を格納
-    mm += "";
-    if (mm.length === 1) {
-        mm = "0" + mm;
-    }
-    dd += "";
-    if (dd.length === 1) {
-        dd = "0" + dd;
-    }
-    var work_month = yyyy + "" + mm + "" + dd;
-    $("#disp_date").val(work_month);
-    
-    displayDailyData();
-}
-
-// ----------------------------------------------------------------------
-// 日次画面 進むボタン押下
-// ----------------------------------------------------------------------
-function forwardDate() {
-    var old_yyyy = $("#disp_date").val().substring(0,4);
-    var old_mm = $("#disp_date").val().substring(4,6);
-    var old_dd = $("#disp_date").val().substring(6,8);
-    
-    var date = new Date(old_yyyy + "-" + old_mm + "-" + old_dd);
-    date.setDate(date.getDate() + 1);
-    
-    var yyyy = date.getFullYear();
-    var mm = date.getMonth() + 1;
-    var dd = date.getDate();
-        
-    // 表示中の日付を格納
-    mm += "";
-    if (mm.length === 1) {
-        mm = "0" + mm;
-    }
-    dd += "";
-    if (dd.length === 1) {
-        dd = "0" + dd;
-    }
-    var work_month = yyyy + "" + mm + "" + dd;
-    $("#disp_date").val(work_month);
-    
-    displayDailyData();
-} 
 
 function setMaxManth() {
     // DB接続
@@ -1153,7 +1163,7 @@ function setHoliday(text) {
                 $("#work_time_input_area").hide();
                 
                 // データベース更新
-                sql = "UPDATE t_daily SET work_div = '" + setHolidayWK + "' WHERE work_month = '" + ymWk +"' and work_date = '" + ymdWk + "'";
+                sql = "UPDATE t_daily SET work_div = '" + setHolidayWK + "' , actual_work_start_time = null, .actual_work_end_time = null WHERE work_month = '" + ymWk +"' and work_date = '" + ymdWk + "'";
                 execSQL(db, sql, [], function(rs) {
                     alert("休暇登録しました。");
                 }, function(error) {
@@ -1246,7 +1256,8 @@ function sendMail() {
         + " t_daily.actual_work_end_time, "
         + " t_daily.work_div, "
         + " t_daily.remark, "
-        + " t_monthly.basic_break_time "
+        + " t_monthly.basic_break_start_time, "
+        + " t_monthly.basic_break_end_time "
         + " FROM t_daily LEFT JOIN t_monthly "
         + " ON t_daily.work_month = t_monthly.work_month"
         + " WHERE t_daily.work_month = " + yearMonth;
@@ -1292,13 +1303,29 @@ function sendMail() {
                 // 休憩時間
                 if (item.actual_work_start_time == "" || item.actual_work_start_time == null
                     || item.actual_work_end_time == "" || item.actual_work_end_time == null
-                    || item.basic_break_time == "" || item.basic_break_time == null) {
+                    || item.basic_break_start_time == "" || item.basic_break_start_time == null
+                    || item.basic_break_end_time == "" || item.basic_break_end_time == null) {
                         body = body + ",";
                         
                 } else {
-                        breakTime = item.basic_break_time;
-                        body = body + breakTime.substring(0,2) + ":" 
-                            + breakTime.substring(2,4) + ",";
+                    // 基本休憩終了時間　<= 出勤
+                    if (item.basic_break_start_time <= item.actual_work_start_time) {
+                        body = body + "00:00" + ",";
+                        
+                    // 出勤 < 基本休憩開始時間 かつ 基本休憩終了時間 < 退勤
+                    } else if (item.actual_work_start_time < item.basic_break_start_time
+                        && item.basic_break_end_time < item.actual_work_end_time) {
+                            breakTime = "0" + (item.basic_break_end_time - item.basic_break_start_time);
+                            body = body + (breakTime).substring(0,2) + ":"
+                                + (breakTime).substring(2,4) + ",";
+                                
+                    // 基本休憩開始時間 < 出勤 かつ 基本休憩終了時間 <= 退勤
+                    } else if (item.basic_break_start_time < item.actual_work_start_time
+                        && item.basic_break_end_time <= item.actual_work_end_time) {
+                            breakTime = "00" + item.basic_break_end_time - item.actual_work_start_time;
+                            body = body + breakTime.substring(0,2) + ":" 
+                                + breakTime.substring(2,4) + ",";
+                    } 
                 }
                 
                 // 勤務区分
