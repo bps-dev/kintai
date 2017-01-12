@@ -1,48 +1,46 @@
-<ons-navigator>
-   <ons-page id="setting_page" >
-        <ons-toolbar>
-            <div class="left">
-                <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
-            </div>
-            <div class="center">設定画面</div>
-        </ons-toolbar>
-        
-        <div style="text-align: center">
-            
-            <section style="padding: 20px 20px 0px 20px;">
-            <div style="text-align: left;">基本作業時間</div>
-            <table style="border: solid 1px #000000; border-radius: 5px;">
-                <tr>
-                    <td style="padding: 8px;">
-                        <div style="text-align: left">始業時間</div>
-                        <div class="timePicker" style="font-size: 20px; width: 115px;display: table-cell;vertical-align: middle;" id="basicWorkStartTime"/>
-                    </td>
-                    <td>～</td>
-                    <td style="padding: 8px;">
-                        <div style="text-align: left">終業時間</div>
-                        <div class="timePicker" style="font-size: 20px; width: 115px;display: table-cell;vertical-align: middle;" id="basicWorkEndTime"/>
-                    </td>
-                </tr>
-            </table>
-            </section>
-            
-            <section style="padding: 20px 20px 0px 20px;">
-            <div style="text-align: left;">休憩時間</div>
-            <table style="border: solid 1px #000000; border-radius: 5px;">
-                <tr>
-                    <td style="padding: 8px;">
-                        <input type="number" maxlength="4" style="font-size: 20px; width: 115px;display: table-cell;vertical-align: middle;" id="basicBreakTime"/>
-                    </td>
-                </tr>
-            </table>
-            </section>
-            
-            <!-- ＤＢテスト -->
-            <section style="padding: 30px 20px 0px 20px;">
-                <ons-button id="update">　設　定　</ons-button>
-            </section>
-            
-        
+<ons-page id="setting_page" >
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
         </div>
-    </ons-page>
-</ons-navigator>
+        <div class="center">設定画面</div>
+    </ons-toolbar>
+
+    <div style="text-align: center">
+
+        <section style="padding: 20px 20px 0px 20px;">
+        <div style="text-align: left;">基本作業時間</div>
+        <table style="border: solid 1px #000000; border-radius: 5px;">
+            <tr>
+                <td style="padding: 8px;">
+                    <div style="text-align: left">始業時間</div>
+                    <div class="timePicker" style="font-size: 20px; width: 115px;display: table-cell;vertical-align: middle;" id="basicWorkStartTime"/>
+                </td>
+                <td>～</td>
+                <td style="padding: 8px;">
+                    <div style="text-align: left">終業時間</div>
+                    <div class="timePicker" style="font-size: 20px; width: 115px;display: table-cell;vertical-align: middle;" id="basicWorkEndTime"/>
+                </td>
+            </tr>
+        </table>
+        </section>
+
+        <section style="padding: 20px 20px 0px 20px;">
+        <div style="text-align: left;">休憩時間</div>
+        <table style="border: solid 1px #000000; border-radius: 5px;">
+            <tr>
+                <td style="padding: 8px;">
+                  <input type="number" maxlength="4" style="font-size: 20px; width: 115px;display: table-cell;vertical-align: middle;" id="basicBreakTime"/>
+                </td>
+            </tr>
+        </table>
+        </section>
+
+        <!-- ＤＢテスト -->
+        <section style="padding: 30px 20px 0px 20px;">
+            <ons-button id="update">　設　定　</ons-button>
+        </section>
+
+
+    </div>
+</ons-page>

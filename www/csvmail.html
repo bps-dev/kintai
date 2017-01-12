@@ -1,58 +1,56 @@
-<ons-navigator>
-   <ons-page id="csvmail_page">
-        <ons-toolbar>
-            <div class="left">
-                <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
-            </div>
-            <div class="center">メールでCSV送信</div>
-        </ons-toolbar>
-        
-        <div style="text-align: center">
-            <section style="padding: 20px 20px 0px 20px;">
-                端末標準のメーラーを起動し、<br>メール本文に勤怠情報を出力します。<br>（CSV形式）<br><br>
-                <table align="center">
-                    <tr>
-                        <td>
-                            <div style="text-align: left;">出力年月</div>
-                            <table style="border: solid 1px #000000; border-radius: 5px;" align="center">
-                                <tr>
-                                    <td style="padding: 8px;">
-                                        <select name="work_year" id="work_year">
-                                            <option value="2015">2015</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2018">2018</option>
-                                            <option value="2019">2019</option>
-                                        </select>
-                                        年
-                                        <select name="work_month" id="work_month">
-                                            <option value="01">01</option>
-                                            <option value="02">02</option>
-                                            <option value="03">03</option>
-                                            <option value="04">04</option>
-                                            <option value="05">05</option>
-                                            <option value="06">06</option>
-                                            <option value="07">07</option>
-                                            <option value="08">08</option>
-                                            <option value="09">09</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                        </select>
-                                        月
-                                        <!--<input type="month" style="font-size: 20px; width: 150px;" id="work_month" />-->
-                                        <!--<div class="monthPicker" style="font-size: 20px; width: 150px;" id="work_month" />-->
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </section>
-            
-            <section style="padding: 30px 20px 0px 20px;">
-                <ons-button id="sendMail">　出　力　</ons-button>
-            </section>
+<ons-page id="csvmail_page">
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
         </div>
-    </ons-page>
-</ons-navigator>
+        <div class="center">メールでCSV送信</div>
+    </ons-toolbar>
+
+    <div style="text-align: center">
+        <section style="padding: 20px 20px 0px 20px;">
+            端末標準のメーラーを起動し、<br>メール本文に勤怠情報を出力します。<br>（CSV形式）<br><br>
+            <table align="center">
+                <tr>
+                    <td>
+                        <div style="text-align: left;">出力年月</div>
+                        <table style="border: solid 1px #000000; border-radius: 5px;" align="center">
+                            <tr>
+                                <td style="padding: 8px;">
+                                    <select name="work_year" id="work_year">
+                                        <option value="2015">2015</option>
+                                        <option value="2016">2016</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                    </select>
+                                    年
+                                    <select name="work_month" id="work_month">
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    月
+                                    <!--<input type="month" style="font-size: 20px; width: 150px;" id="work_month" />-->
+                                    <!--<div class="monthPicker" style="font-size: 20px; width: 150px;" id="work_month" />-->
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <section style="padding: 30px 20px 0px 20px;">
+            <ons-button id="sendMail">　出　力　</ons-button>
+        </section>
+    </div>
+</ons-page>
