@@ -171,7 +171,7 @@ function dateClear() {
 
 document.addEventListener("pageinit", function(e) {
     // メニューを閉じる
-    app.slidingMenu.closeMenu()
+    app.slidingMenu.closeMenu();
     
     if (e.target.id == "daily_page") {
         // 日次画面のイベント処理
@@ -294,9 +294,9 @@ document.addEventListener("pageinit", function(e) {
         });
     }
     if (e.target.id == "splash_page") {
+        navigator.splashscreen.hide("slow");
         setTimeout(function(){myNavigator.replacePage('monthly.html', { animation : 'slide' } );}, 3000);
     }
-
 }, false);
 
 //月次画面から日次画面を取得
